@@ -1,21 +1,36 @@
 from fastapi import FastAPI
 
-from api import courses, sections, users
-from db.database import engine
-from db.models import course, user
-
-user.Base.metadata.create_all(bind=engine)
-course.Base.metadata.create_all(bind=engine)
+from api import routes
+from db.settings import init_db
 
 
-app = FastAPI(
-    title="My Fast API",
-    description="LMS for managing students and courses",
-    version="0.0.1",
-    contact={"name": "Lisa", "email": "donotdisturb@email.com"},
-)
+def create_app():
+    """Instantiate FastAPI app."""
+    app = FastAPI(
+        title="My Fast API",
+        description="LMS for managing students and courses",
+        version="0.0.1",
+        contact={"name": "Lisa", "email": "donotdisturb@email.com"},
+    )
+    app.include_router(routes.router)
+
+    @app.on_event("startup")
+    def _on_startup():
+        # setup db engine
+        init_db()
+
+    return app
 
 
-app.include_router(users.router)
-app.include_router(sections.router)
-app.include_router(courses.router)
+application = create_app()
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "main:application",
+        host="localhost",
+        port=8000,
+        reload=True,
+        http="httptools",
+    )
