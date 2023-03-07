@@ -6,7 +6,6 @@ from sqlmodel import Column, DateTime, Field
 
 
 class TimeStampMixin(BaseModel):
-    __config__ = None
     created_at: Optional[datetime] = Field(
         sa_column=Column(
             DateTime,

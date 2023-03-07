@@ -4,10 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic.types import UUID4
 from sqlmodel import col, select, Session
 
-from api.functions import get_user_by_email
-from db.io_schemas import CourseBase, CourseResponse, UserBase, UserResponse
-from db.models import Course, User
-from db.settings import get_db_session
+from codebase.api.functions import get_user_by_email
+from codebase.db.io_schemas import (
+    CourseBase,
+    CourseResponse,
+    UserBase,
+    UserResponse,
+)
+from codebase.db.models import Course, User
+from codebase.db.settings import get_db_session
 
 router = APIRouter()
 db_session: Session = Depends(get_db_session)
