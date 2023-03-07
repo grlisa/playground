@@ -1,0 +1,29 @@
+x-pg-vars: &pg-db-env
+  POSTGRES_DB: ${POSTGRES_DB:-fastAPI-lms}
+  POSTGRES_USER: ${POSTGRES_USER:-postgres}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+
+services:
+  backend:
+    build:
+      context: .
+    tty: true
+    environment:
+      <<: [*pg-db-env]
+      SECURE_COOKIE: 0
+      APP_SECRET: ${APP_SECRET:-1742696f543153f3f83cca5e6f97a0d432e73fc6a5293a11fa0f23e5ff7b492e}
+      APP_URI: http://backend:8000
+      DB_URI: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-fastAPI-lms}
+    ports:
+      - 8000:8000
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment: *pg-db-env
+    ports:
+      - 5432:5432
