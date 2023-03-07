@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from api import routes
-from db.settings import init_db
+from codebase.api import routes
+from codebase.db.settings import init_db
 
 
 def create_app():
