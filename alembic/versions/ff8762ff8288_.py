@@ -31,10 +31,6 @@ def upgrade() -> None:
     op.add_column(
         'users',
         sa.Column('role', sa.Enum('teacher', 'student', name='role'), nullable=True))
-    with open(os.path.join(os.path.dirname(__file__), "../data/students.json")) as f:
-        students = f.read()
-    op.bulk_insert(users, json.loads(students))
-
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id_'], unique=False)
     op.create_table('courses',
